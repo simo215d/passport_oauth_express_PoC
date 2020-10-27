@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
 router.get('/login', function(req, res, next) {
-  res.send("Loggin in!");
+    res.render('login');
+});
+
+router.get('/google', function(req, res, next) {
+    res.send('you using google as login1');
 });
 
 module.exports = router;
