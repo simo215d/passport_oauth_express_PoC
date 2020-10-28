@@ -1,6 +1,19 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
-const findUser = require('../models/user_models.js');
+const findUser = require('../models/user_models.js').m1;
+const findUserById = require('../models/user_models.js').m2;
+
+//lav cookie fra user baseret på id
+passport.serializeUser((user, done)=>{
+    done(null, user.id);
+})
+
+//modtager en id fra cookie, så vi kan se om hvem der tilhører id'en
+passport.deserializeUser((cookieID, done)=>{
+    findUserById(cookieID).then((user)=>{
+        done(null, user);
+    })
+})
 
 passport.use(
     new GoogleStrategy({
@@ -16,6 +29,16 @@ passport.use(
         //brugeren får ikke en response før denne funktion er færdig, så vi har god tid til at kontrollere
         //
         //findes vores bruger i databasen:
-        findUser('Mokkil');
+        findUser(profile.displayName).then((user)=>{
+            if(user==null){
+                //redirect user back to login page with faliure message
+                console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
+            } else {
+                //this function sends us to the next stage which is serializeUser()
+                //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
+                console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
+                done(null, user);
+            }
+        });
     })
 )

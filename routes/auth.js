@@ -13,7 +13,8 @@ router.get('/google', passport.authenticate('google',{
 
 //callback route for google to redirect to. Profile info findes i vores url som findes efter man er blevet redirected
 router.get('/google/redirect/', passport.authenticate('google'), (req, res)=> {
-    res.send('you logged in with google: success!');
+    //res.send(req.user);  returnere objektet som er linket til sessionen
+    res.redirect('/profiles')
 });
 
 module.exports = router;

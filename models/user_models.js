@@ -6,7 +6,8 @@ const sequelize = new Sequelize('passporttest1', 'root', 'pwd123', {
     dialect: 'mariadb'
 });
 
-/*async function lol(){
+/* to test connection
+async function lol(){
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
@@ -23,10 +24,10 @@ User.init({
     password: DataTypes.STRING
 }, { sequelize, modelName: 'user' });
 
-async function begin(){
+/*async function begin(){
     //sync is important: https://sequelize.org/master/manual/model-basics.html#model-synchronization
     await sequelize.sync();
-    /*const jane = await User.create({
+    const jane = await User.create({
         username: 'Mokkil',
         password: 'mokkeren123'
     });
@@ -36,29 +37,37 @@ async function begin(){
         password: 'damn123'
     });
     console.log(simon.toJSON());
-    */
-    //findTheBros();
+    
 };
 begin();
+*/
 
-async function findAllUsers(){
-    // Find all users
-    console.log("------NOW FINDING ALL USER MODELS---------")
-    const users = await Bro.findAll();
-    console.log(users.every(user => user instanceof Bro)); // true
-    console.log("All users:", JSON.stringify(users, null, 2));
-    //findOnlyJane();
-}
-
-module.exports = async function findUser(usrnm){
-    console.log("---Attempting to find the bro :)---");
-    const bro = await User.findOne({ where: { username: usrnm } });
-    if (bro === null) {
-        console.log('bro Not found!');
-    } else {
-        console.log("---OMG! i found bro the user:---");
-        console.log(bro instanceof Bro); // true
-        console.log(bro.username); // 'My Title'
+module.exports = {
+    m1: async function findUser(usrnm){
+        console.log("---finding user by name"+usrnm+"---");
+        const user = await User.findOne({ where: { username: usrnm } });
+        if (user === null) {
+            console.log('user Not found!');
+            return null;
+        } else {
+            console.log("---OMG! i found the user:---");
+            console.log(user instanceof User); // true
+            console.log(user.username); // 'My Title'
+            return user;
+        }
+    },
+    m2: async function findUserById(id){
+        console.log("---finding user by ID:"+id+"---");
+        const user = await User.findOne({ where: { id: id } });
+        if (user === null) {
+            console.log('user Not found!');
+            return null;
+        } else {
+            console.log("---OMG! i found the user:---");
+            console.log(user instanceof User); // true
+            console.log(user.username); // 'My Title'
+            return user;
+        }
     }
 }
 
