@@ -11,6 +11,10 @@ router.get('/google', passport.authenticate('google',{
     scope:['profile']
 }));
 
+router.get('/zealandconnect', function(req, res, next){
+    res.render('zealandconnectlogin');
+});
+
 //callback route for google to redirect to. Profile info findes i vores url som findes efter man er blevet redirected
 router.get('/google/redirect/', passport.authenticate('google'), (req, res)=> {
     //res.send(req.user);  returnere objektet som er linket til sessionen
