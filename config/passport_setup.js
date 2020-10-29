@@ -33,6 +33,7 @@ passport.use(
             if(user==null){
                 //redirect user back to login page with faliure message
                 console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
+                done(null, null);
             } else {
                 //this function sends us to the next stage which is serializeUser()
                 //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
