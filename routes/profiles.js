@@ -2,6 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 const authCheck = (req, res, next)=>{
+    console.log('CHECKING IF LOGGED IN');
+    console.log('CHECKING IF LOGGED IN');
+    console.log('CHECKING IF LOGGED IN');
+    console.log('CHECKING IF LOGGED IN');
+    console.log('CHECKING IF LOGGED IN');
     if(!req.user){
         res.redirect('/auth/login');
     } else {

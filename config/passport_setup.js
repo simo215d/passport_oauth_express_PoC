@@ -1,4 +1,4 @@
-const passport = require('passport');
+const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20');
 const findUser = require('../models/user_models.js').m1;
 const findUserById = require('../models/user_models.js').m2;
@@ -15,8 +15,7 @@ passport.deserializeUser((cookieID, done)=>{
     })
 })
 
-passport.use(
-    new GoogleStrategy({
+passport.use(new GoogleStrategy({
         //options for google strat
         callbackURL:'http://localhost:3000/auth/google/redirect',
         clientID: '355832749697-3c12vop7707aq3bi5osp47admunsal8f.apps.googleusercontent.com',
@@ -42,4 +41,33 @@ passport.use(
             }
         });
     })
-)
+);
+
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+        function(username, password, done) {
+            console.log('Youve reached the local strat callback!');
+            findUser(username).then((user)=>{
+                if(user==null){
+                    //redirect user back to login page with faliure message
+                    console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
+                    return done(null, false, { message: 'Incorrect username.' });
+                } else {
+                    //this function sends us to the next stage which is serializeUser()
+                    //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
+                    console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
+                    //user exists in the database, now check if the password matches
+                    if(password==user.password){
+                        console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
+                        return done(null, user);
+                    } else {
+                        console.log('passowrds did not match');
+                        return done(null, false, { message: 'Incorrect password.' });
+                    }
+                }
+            });
+        }
+    )
+);

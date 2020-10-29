@@ -19,6 +19,19 @@ router.get('/google', passport.authenticate('google',{
     scope:['profile']
 }));
 
+router.post('/zealand', passport.authenticate('local',{ successRedirect: '/profiles', failureRedirect: '/auth/login?error=usernotfound'}));
+//denne her kan bruges til at debugge :)
+/*router.post('/zealand', function(req, res, next) {
+    console.log('YO her er din request som kom fra vores form :');
+    console.log(req.url);
+    passport.authenticate('local', function(err, user, info) {
+        console.log("authenticate");
+        console.log(err);
+        console.log(user);
+        console.log(info);
+    })(req, res, next);
+});*/
+
 router.get('/zealandconnect', function(req, res, next){
     res.render('zealandconnectlogin');
 });
