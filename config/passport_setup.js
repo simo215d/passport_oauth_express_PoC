@@ -1,7 +1,9 @@
 const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20');
+const becrypt = require('bcrypt');
 const findUser = require('../models/user_models.js').m1;
 const findUserById = require('../models/user_models.js').m2;
+const createGoogleUser = require('../models/user_models.js').m3;
 
 //lav cookie fra user baseret på id
 passport.serializeUser((user, done)=>{
@@ -32,7 +34,9 @@ passport.use(new GoogleStrategy({
             if(user==null){
                 //redirect user back to login page with faliure message
                 console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
-                done(null, null);
+                createGoogleUser(profile.displayName, profile.id).then((user)=>{
+                    done(null, user);
+                });
             } else {
                 //this function sends us to the next stage which is serializeUser()
                 //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
@@ -59,7 +63,7 @@ passport.use(new LocalStrategy({
                     //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
                     console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
                     //user exists in the database, now check if the password matches
-                    if(password==user.password){
+                    if(becrypt.compare(password,user.password)){
                         console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
                         return done(null, user);
                     } else {

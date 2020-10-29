@@ -1,4 +1,6 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
+const becrypt = require('bcrypt');
+const saltrounds = 10;
 
 const sequelize = new Sequelize('passporttest1', 'root', 'pwd123', {
     host: '0.0.0.0',
@@ -68,6 +70,23 @@ module.exports = {
             console.log(user.username); // 'My Title'
             return user;
         }
+    },
+    m3: async function creaeGoogleUser(username, googleID){
+        console.log("---creating user by ID:"+googleID+"---");
+        const newUser = await User.create({
+            username: username,
+            password: googleID
+        });
+        return newUser;
+    },
+    m4: async function creaeZealandUser(username, password){
+        console.log("---creating user by ID:"+password+"---");
+        const encryptedPassword = await becrypt.hash(password, saltrounds);
+        const newUser = await User.create({
+            username: username,
+            password: encryptedPassword
+        });
+        return newUser;
     }
 }
 
