@@ -33,7 +33,7 @@ passport.use(new GoogleStrategy({
         findUser(profile.displayName).then((user)=>{
             if(user==null){
                 //redirect user back to login page with faliure message
-                console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
+                console.log("ERROR: USER NOT FOUND---\nSo we create a new google account automaticly");
                 createGoogleUser(profile.displayName, profile.id).then((user)=>{
                     done(null, user);
                 });

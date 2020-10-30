@@ -89,7 +89,7 @@ async function creaeGoogleUser(username, googleID){
     })
 }
 
-async function creaeZealandUser(username, password){
+async function createZealandUser(username, password){
     console.log("---attempting user with username: "+username+"---");
     //læs database og check at brugeren ikke findes i forvejen
     findUserByName(username).then(async (user)=>{
@@ -110,5 +110,5 @@ module.exports = {
     m1: findUserByName,
     m2: findUserById,
     m3: creaeGoogleUser,
-    m4: creaeZealandUser
+    m4: createZealandUser
 }
