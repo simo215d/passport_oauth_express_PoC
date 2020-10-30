@@ -44,50 +44,71 @@ User.init({
 begin();
 */
 
-module.exports = {
-    m1: async function findUser(usrnm){
-        console.log("---finding user by name"+usrnm+"---");
-        const user = await User.findOne({ where: { username: usrnm } });
-        if (user === null) {
-            console.log('user Not found!');
-            return null;
-        } else {
-            console.log("---OMG! i found the user:---");
-            console.log(user instanceof User); // true
-            console.log(user.username); // 'My Title'
-            return user;
-        }
-    },
-    m2: async function findUserById(id){
-        console.log("---finding user by ID:"+id+"---");
-        const user = await User.findOne({ where: { id: id } });
-        if (user === null) {
-            console.log('user Not found!');
-            return null;
-        } else {
-            console.log("---OMG! i found the user:---");
-            console.log(user instanceof User); // true
-            console.log(user.username); // 'My Title'
-            return user;
-        }
-    },
-    m3: async function creaeGoogleUser(username, googleID){
-        console.log("---creating user by ID:"+googleID+"---");
-        const newUser = await User.create({
-            username: username,
-            password: googleID
-        });
-        return newUser;
-    },
-    m4: async function creaeZealandUser(username, password){
-        console.log("---creating user by ID:"+password+"---");
-        const encryptedPassword = await becrypt.hash(password, saltrounds);
-        const newUser = await User.create({
-            username: username,
-            password: encryptedPassword
-        });
-        return newUser;
+async function findUserByName(usrnm){
+    console.log("---finding user by name"+usrnm+"---");
+    const user = await User.findOne({ where: { username: usrnm } });
+    if (user === null) {
+        console.log('user Not found!');
+        return null;
+    } else {
+        console.log("---OMG! i found the user:---");
+        console.log(user instanceof User); // true
+        console.log(user.username); // 'My Title'
+        return user;
     }
 }
 
-//findBro('simondoe');
+async function findUserById(id){
+    console.log("---finding user by ID:"+id+"---");
+    const user = await User.findOne({ where: { id: id } });
+    if (user === null) {
+        console.log('user Not found!');
+        return null;
+    } else {
+        console.log("---OMG! i found the user:---");
+        console.log(user instanceof User); // true
+        console.log(user.username); // 'My Title'
+        return user;
+    }
+}
+
+async function creaeGoogleUser(username, googleID){
+    console.log("---creating user by ID:"+googleID+"---");
+    //læs database og check at brugeren ikke findes i forvejen
+    findUserByName(username).then((user)=>{
+        if(user!=null){
+            return null;
+        }
+        async()=>{
+            const newUser = await User.create({
+                username: username,
+                password: googleID
+            });
+            return newUser;
+        }
+    })
+}
+
+async function creaeZealandUser(username, password){
+    console.log("---attempting user with username: "+username+"---");
+    //læs database og check at brugeren ikke findes i forvejen
+    findUserByName(username).then(async (user)=>{
+        if(user!=null){
+            return null;
+        }
+        await becrypt.hash(password, saltrounds).then(async(encryptedPassword)=>{
+            const newUser = await User.create({
+                username: username,
+                password: encryptedPassword
+            });
+            return newUser;
+        });
+    })
+}
+
+module.exports = {
+    m1: findUserByName,
+    m2: findUserById,
+    m3: creaeGoogleUser,
+    m4: creaeZealandUser
+}

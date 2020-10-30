@@ -53,23 +53,26 @@ passport.use(new LocalStrategy({
     },
         function(username, password, done) {
             console.log('Youve reached the local strat callback!');
-            findUser(username).then((user)=>{
+            findUser(username).then(async(user)=>{
                 if(user==null){
                     //redirect user back to login page with faliure message
                     console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
-                    return done(null, false, { message: 'Incorrect username.' });
+                    return done(null, false, { message: '?error=incorrectusername' });
                 } else {
                     //this function sends us to the next stage which is serializeUser()
                     //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
                     console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
                     //user exists in the database, now check if the password matches
-                    if(becrypt.compare(password,user.password)){
-                        console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
-                        return done(null, user);
-                    } else {
-                        console.log('passowrds did not match');
-                        return done(null, false, { message: 'Incorrect password.' });
-                    }
+                    let crypt = await becrypt.hash(password, 10)
+                    becrypt.compare(password,user.password, function(err, result){
+                        if(result==true){
+                            console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
+                            return done(null, user);
+                        } else {
+                            console.log('passowrds did not match');
+                            return done(null, false, { message: '?error=incorrectpassword' });
+                        }
+                    })
                 }
             });
         }

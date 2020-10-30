@@ -10,7 +10,8 @@ router.get('/login', function(req, res, next) {
     let msg = error.error;
     console.log("THIS ERROR "+msg);
     switch(msg){    
-        case 'usernotfound': res.render('login', { title: 'Din google account findes ikke i vores system gå til opret bruger for at oprette dig i systemet.' }); break;
+        case 'incorrectusername': res.render('login', { errormsg: 'Din account findes ikke i vores system gå til opret bruger for at oprette dig i systemet.' }); break;
+        case 'incorrectpassword': res.render('login', { errormsg: 'Din account findes i vores system, men dit password er forkert.' }); break;
         default: res.render('login'); break;
     }
 });
@@ -19,7 +20,12 @@ router.get('/google', passport.authenticate('google',{
     scope:['profile']
 }));
 
-router.post('/zealand', passport.authenticate('local',{ successRedirect: '/profiles', failureRedirect: '/auth/login?error=usernotfound'}));
+//router.post('/zealand', passport.authenticate('local',{ successRedirect: '/profiles', failureRedirect: '/auth/login?error=usernotfound'}));
+router.post('/zealand', function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
+        res.redirect('/auth/login'+info.message);
+    })(req, res, next);
+});
 //denne her kan bruges til at debugge :)
 /*router.post('/zealand', function(req, res, next) {
     console.log('YO her er din request som kom fra vores form :');
@@ -37,7 +43,7 @@ router.get('/zealandconnect', function(req, res, next){
 });
 
 //callback route for google to redirect to. Profile info findes i vores url som findes efter man er blevet redirected
-router.get('/google/redirect/', passport.authenticate('google', { failureRedirect: '/auth/login?error=usernotfound' }), (req, res)=> {
+router.get('/google/redirect/', passport.authenticate('google', { failureRedirect: '/auth/login?error=incorrectusername' }), (req, res)=> {
     //res.send(req.user);  returnere objektet som er linket til sessionen
     res.redirect('/profiles')
 });
