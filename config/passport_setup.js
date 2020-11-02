@@ -53,17 +53,16 @@ passport.use(new LocalStrategy({
     },
         function(username, password, done) {
             console.log('Youve reached the local strat callback!');
+            //når vi prøver at logge ind, skal vi checke om brugeren findes i db
             findUser(username).then(async(user)=>{
                 if(user==null){
                     //redirect user back to login page with faliure message
                     console.log("ERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\nERROR: USER NOT FOUND---\n");
                     return done(null, false, { message: '?error=incorrectusername' });
                 } else {
-                    //this function sends us to the next stage which is serializeUser()
-                    //TODO denne user skal returneres af findUser, så vi kan få id'en og lave en cookie af den.
                     console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
+                    //let crypt = await becrypt.hash(password, 10)
                     //user exists in the database, now check if the password matches
-                    let crypt = await becrypt.hash(password, 10)
                     becrypt.compare(password,user.password, function(err, result){
                         if(result==true){
                             console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
