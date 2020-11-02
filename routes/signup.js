@@ -26,6 +26,10 @@ router.post('/zealand', function(req, res, next) {
     createZealandUser(req.body.email, req.body.password).then((user)=>{
         if(user==null){
             res.redirect('/signup/zealandconnect?error=useralreadyexists')
+            console.log('HEJ JEG TAGER IMOD POST FRA ZEALANDCREATE. JEG FIK NULL FRA CREATE METODEN');
+            console.log('HEJ JEG TAGER IMOD POST FRA ZEALANDCREATE. JEG FIK NULL FRA CREATE METODEN');
+            console.log('HEJ JEG TAGER IMOD POST FRA ZEALANDCREATE. JEG FIK NULL FRA CREATE METODEN');
+            console.log('HEJ JEG TAGER IMOD POST FRA ZEALANDCREATE. JEG FIK NULL FRA CREATE METODEN');
         } else res.redirect('/auth/zealandconnect');
     })
 });

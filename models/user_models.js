@@ -90,20 +90,25 @@ async function creaeGoogleUser(username, googleID){
 }
 
 async function createZealandUser(username, password){
-    console.log("---attempting user with username: "+username+"---");
-    //læs database og check at brugeren ikke findes i forvejen
-    findUserByName(username).then(async (user)=>{
-        if(user!=null){
-            return null;
-        }
-        await becrypt.hash(password, saltrounds).then(async(encryptedPassword)=>{
-            const newUser = await User.create({
-                username: username,
-                password: encryptedPassword
+    //bruger promise, så dem der kalder metoden bliver nød til, at vente til resolve er smidt tilbage.
+    return new Promise(resolve =>{
+        console.log("---attempting to create zealand user with username: "+username+"---");
+        //læs database og check at brugeren ikke findes i forvejen
+        findUserByName(username).then(async (user)=>{
+            if(user!=null){
+                resolve(null);
+            }
+            await becrypt.hash(password, saltrounds).then(async(encryptedPassword)=>{
+                console.log("--- brugeren findes ikke endnu, så jeg indsætter den ---");
+                const newUser = await User.create({
+                    username: username,
+                    password: encryptedPassword
+                });
+                console.log("--- den er indsat nu og jeg returnere den oprettede bruger ---");
+                resolve(newUser);
             });
-            return newUser;
-        });
-    })
+        })
+    });
 }
 
 module.exports = {
