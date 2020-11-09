@@ -39,6 +39,10 @@ describe('Find bruger i database baseret på id', function(){
     })
 })
 
+describe('Check om 2 password er ens', function(){
+    TODOOOOOOOO
+})
+
 describe('Opret en googlebruger i systemet og så check at den eksisterer', function(){
     it('Bør oprette google bruger og kunne finde brugeren baseret på username', function(done){
         let username = 'benny';

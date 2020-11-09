@@ -25,14 +25,15 @@ router.get('/google', passport.authenticate('google',{
     scope:['profile']
 }));
 
-//router.post('/zealand', passport.authenticate('local',{ successRedirect: '/profiles', failureRedirect: '/auth/login?error=usernotfound'}));
-//Dette er gamle
 router.post('/zealand', function(req, res, next) {
-    //req.logout();
     passport.authenticate('local', function(err, user, info) {
         console.log('HER ER USER EFTER CALLBACK:');
         console.log(user);
-        //den gamle cookie skal stoppes. ellers kan den nye cookie ikke oprettes.
+        //handle error
+        if(!user){
+            return res.redirect('/auth/login'+info.message);
+        }
+        //Der var ikke nogle fejl så den gamle cookie skal stoppes. ellers kan den nye cookie ikke oprettes.
         req.logout();
         //login skal være der for, at passport laver en cookie for brugeren
         req.logIn(user, function(err) {
