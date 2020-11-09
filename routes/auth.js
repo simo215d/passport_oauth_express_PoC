@@ -32,6 +32,8 @@ router.post('/zealand', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         console.log('HER ER USER EFTER CALLBACK:');
         console.log(user);
+        //den gamle cookie skal stoppes. ellers kan den nye cookie ikke oprettes.
+        req.logout();
         //login skal være der for, at passport laver en cookie for brugeren
         req.logIn(user, function(err) {
             if (err) { return next(err); }
@@ -39,17 +41,6 @@ router.post('/zealand', function(req, res, next) {
           });
     })(req, res, next);
 });
-//dette er nye
-/*router.post('/zealand', passport.authenticate('local', { failureRedirect: '/auth/login?error=incorrectusername' }), (req, res)=>{
-    console.log("JUST AUTHENTICATED USING PASSPORT!");
-    console.log(req.user);
-    //handle error else redirect to users profile
-    console.log("ERRORS?????:");
-    console.log(req.authInfo);
-    if(!req.authInfo=='none'){
-        res.redirect('/auth/login'+req.authInfo);
-    } else res.redirect('/profiles')
-})*/
 //denne her kan bruges til at debugge :)
 /*router.post('/zealand', function(req, res, next) {
     console.log('YO her er din request som kom fra vores form :');

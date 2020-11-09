@@ -111,16 +111,18 @@ async function createZealandUser(username, password){
     });
 }
 
-function verifyPassword(htmlPwd, dbPwd){
-    console.log('Trying to verify password from login: '+htmlPwd);
-    becrypt.compare(htmlPwd,dbPwd, function(err, result){
+async function verifyPassword(htmlPwd, dbPwd){
+    return new Promise(resolve =>{
+        console.log('Trying to verify password from login: '+htmlPwd);
+        becrypt.compare(htmlPwd,dbPwd, function(err, result){
         if(result==true){
             console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
-            return true;
+            resolve(true);
         } else {
             console.log('passowrds did not match');
-            return false;
+            resolve(false);
         }
+    })
     })
 }
 

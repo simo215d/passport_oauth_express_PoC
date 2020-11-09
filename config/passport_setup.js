@@ -66,14 +66,19 @@ passport.use(new LocalStrategy({
                     console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
                     //let crypt = await becrypt.hash(password, 10)
                     //user exists in the database, now check if the password matches
-                    /*
-                    if(verifyPassword(password, user.password)){
-                        return done(null, user);
+                    /*if(verifyPassword(password, user.password)){
+                        return done(null, user, { message: '?error=none' });
                     } else {
                         return done(null, false, { message: '?error=incorrectpassword' });
-                    }
-                    */
-                    becrypt.compare(password,user.password, function(err, result){
+                    }*/
+                    verifyPassword(password, user.password).then((match)=>{
+                        if(match){
+                            return done(null, user, { message: '?error=none' });
+                        } else {
+                            return done(null, false, { message: '?error=incorrectpassword' });
+                        }
+                    })
+                    /*becrypt.compare(password,user.password, function(err, result){
                         if(result==true){
                             console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
                             return done(null, user, { message: '?error=none' });
@@ -82,6 +87,7 @@ passport.use(new LocalStrategy({
                             return done(null, false, { message: '?error=incorrectpassword' });
                         }
                     })
+                    */
                 }
             });
         }
