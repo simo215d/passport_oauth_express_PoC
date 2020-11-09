@@ -4,9 +4,12 @@ const becrypt = require('bcrypt');
 const findUser = require('../models/user_models.js').m1;
 const findUserById = require('../models/user_models.js').m2;
 const createGoogleUser = require('../models/user_models.js').m3;
+const verifyPassword = require('../models/user_models.js').m5;
+
 
 //lav cookie fra user baseret på id
 passport.serializeUser((user, done)=>{
+    console.log('User is being serialized so browser has a cookie so it can be identified!');
     done(null, user.id);
 })
 
@@ -63,10 +66,17 @@ passport.use(new LocalStrategy({
                     console.log("SUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\nSUCCESS: USER FOUND---\n");
                     //let crypt = await becrypt.hash(password, 10)
                     //user exists in the database, now check if the password matches
+                    /*
+                    if(verifyPassword(password, user.password)){
+                        return done(null, user);
+                    } else {
+                        return done(null, false, { message: '?error=incorrectpassword' });
+                    }
+                    */
                     becrypt.compare(password,user.password, function(err, result){
                         if(result==true){
                             console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
-                            return done(null, user);
+                            return done(null, user, { message: '?error=none' });
                         } else {
                             console.log('passowrds did not match');
                             return done(null, false, { message: '?error=incorrectpassword' });

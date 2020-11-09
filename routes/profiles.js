@@ -7,8 +7,10 @@ const authCheck = (req, res, next)=>{
     console.log('CHECKING IF LOGGED IN');
     console.log('CHECKING IF LOGGED IN');
     console.log('CHECKING IF LOGGED IN');
+    console.log('User: ');
+    console.log(req.user);
     if(!req.user){
-        res.redirect('/auth/login');
+        res.redirect('/auth/login?error=notloggedin');
     } else {
         next();
     }

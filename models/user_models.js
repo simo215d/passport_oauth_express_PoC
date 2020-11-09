@@ -111,9 +111,23 @@ async function createZealandUser(username, password){
     });
 }
 
+function verifyPassword(htmlPwd, dbPwd){
+    console.log('Trying to verify password from login: '+htmlPwd);
+    becrypt.compare(htmlPwd,dbPwd, function(err, result){
+        if(result==true){
+            console.log('--- PASSWORD MATCH THE DATABASE PASSWORD---');
+            return true;
+        } else {
+            console.log('passowrds did not match');
+            return false;
+        }
+    })
+}
+
 module.exports = {
     m1: findUserByName,
     m2: findUserById,
     m3: creaeGoogleUser,
-    m4: createZealandUser
+    m4: createZealandUser,
+    m5: verifyPassword
 }
