@@ -4,7 +4,7 @@ const saltrounds = 10;
 
 const sequelize = new Sequelize('passporttest1', 'root', 'pwd123', {
     host: '0.0.0.0',
-    port: 32770,
+    port: 32768,
     dialect: 'mariadb'
 });
 
@@ -127,6 +127,7 @@ async function verifyPassword(htmlPwd, dbPwd){
 }
 
 module.exports = {
+    User: User,
     m1: findUserByName,
     m2: findUserById,
     m3: creaeGoogleUser,
